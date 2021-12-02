@@ -32,7 +32,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPager(array $criteria, $page, $limit = 10, array $sort = [])
+    public function getPager(array $criteria, $page, $limit = 10, array $sort = []): void
     {
         new \RuntimeException('method not implemented');
     }

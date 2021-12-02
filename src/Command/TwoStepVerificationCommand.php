@@ -24,7 +24,7 @@ class TwoStepVerificationCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    public function configure(): void
     {
         $this->setName('sonata:user:two-step-verification');
         $this->addArgument('username', InputArgument::REQUIRED, 'The username to protect with a two step verification process');
@@ -35,7 +35,7 @@ class TwoStepVerificationCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): void
     {
         if (!$this->getContainer()->has('sonata.user.google.authenticator.provider')) {
             throw new \RuntimeException('Two Step Verification process is not enabled');

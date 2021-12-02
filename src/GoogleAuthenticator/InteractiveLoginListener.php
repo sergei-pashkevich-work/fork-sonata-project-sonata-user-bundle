@@ -35,7 +35,7 @@ class InteractiveLoginListener
     /**
      * @param InteractiveLoginEvent $event
      */
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
     {
         if (!$event->getAuthenticationToken() instanceof UsernamePasswordToken) {
             return;

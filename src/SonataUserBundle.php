@@ -23,7 +23,7 @@ class SonataUserBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new GlobalVariablesCompilerPass());
 
@@ -33,7 +33,7 @@ class SonataUserBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerFormMapping();
     }
@@ -41,7 +41,7 @@ class SonataUserBundle extends Bundle
     /**
      * Register form mapping information.
      */
-    public function registerFormMapping()
+    public function registerFormMapping(): void
     {
         FormHelper::registerFormTypeMapping([
             'fos_user_username' => 'FOS\UserBundle\Form\Type\UsernameFormType',
