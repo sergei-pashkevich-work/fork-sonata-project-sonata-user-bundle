@@ -1,5 +1,5 @@
 {
-    "name": "paysera/fork-sonata-project-sonata-user-bundle",
+    "name": "sergei-pashkevich-work/fork-sonata-project-sonata-user-bundle",
     "type": "symfony-bundle",
     "description": "Symfony SonataUserBundle",
     "keywords": [
@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.1",
         "friendsofsymfony/user-bundle": "^2.0",
         "sonata-project/admin-bundle": "^3.34",
         "sonata-project/core-bundle": "^3.18",
