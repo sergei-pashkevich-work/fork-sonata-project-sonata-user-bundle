@@ -26,7 +26,7 @@ class GroupManager extends BaseGroupManager implements GroupManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findGroupsBy(array $criteria = null, array $orderBy = null, $limit = null, $offset = null)
+    public function findGroupsBy(?array $criteria = null, ?array $orderBy = null, $limit = null, $offset = null)
     {
         return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
@@ -42,12 +42,12 @@ class GroupManager extends BaseGroupManager implements GroupManagerInterface
 
         $fields = $this->objectManager->getClassMetadata($this->class)->getFieldNames();
         foreach ($sort as $field => $direction) {
-            if (!in_array($field, $fields)) {
+            if (!\in_array($field, $fields, true)) {
                 throw new \RuntimeException(sprintf("Invalid sort field '%s' in '%s' class", $field, $this->class));
             }
         }
 
-        if (0 == count($sort)) {
+        if (0 === \count($sort)) {
             $sort = ['name' => 'ASC'];
         }
 

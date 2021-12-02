@@ -15,6 +15,7 @@ namespace Sonata\UserBundle\Tests\Form\Type;
 
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Sonata\UserBundle\Security\EditableRolesBuilder;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,10 +41,8 @@ class SecurityRolesTypeTest extends TypeTestCase
     public function testGetParent(): void
     {
         $type = new SecurityRolesType($this->roleBuilder);
-        $this->assertEquals(
-            'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
-            $type->getParent()
-        );
+
+        $this->assertSame(ChoiceType::class, $type->getParent());
     }
 
     public function testSubmitValidData(): void
@@ -58,7 +57,7 @@ class SecurityRolesTypeTest extends TypeTestCase
 
         $this->assertTrue($form->isSynchronized());
         $this->assertCount(1, $form->getData());
-        $this->assertTrue(in_array('ROLE_FOO', $form->getData()));
+        $this->assertContains('ROLE_FOO', $form->getData());
     }
 
     public function testSubmitInvalidData(): void
@@ -94,46 +93,27 @@ class SecurityRolesTypeTest extends TypeTestCase
         $this->assertContains('ROLE_SUPER_ADMIN', $form->getData());
     }
 
-    public function testChoicesAsValues(): void
+    protected function getExtensions(): array
     {
-        $resolver = new OptionsResolver();
-        $type = new SecurityRolesType($this->roleBuilder);
+        $this->roleBuilder = $this->createMock(EditableRolesBuilder::class);
 
-        // If 'choices_as_values' option is not defined (Symfony >= 3.0), default value should not be set.
-        $type->configureOptions($resolver);
-
-        $this->assertFalse($resolver->hasDefault('choices_as_values'));
-
-        // If 'choices_as_values' option is defined (Symfony 2.8), default value should be set to true.
-        $resolver->setDefined(['choices_as_values']);
-        $type->configureOptions($resolver);
-        $options = $resolver->resolve();
-
-        $this->assertTrue($resolver->hasDefault('choices_as_values'));
-        $this->assertTrue($options['choices_as_values']);
-    }
-
-    protected function getExtensions()
-    {
-        $this->roleBuilder = $roleBuilder = $this->createMock(EditableRolesBuilder::class);
-
-        $this->roleBuilder->expects($this->any())->method('getRoles')->will($this->returnValue([
+        $this->roleBuilder->method('getRoles')->willReturn([
           'ROLE_FOO' => 'ROLE_FOO',
           'ROLE_USER' => 'ROLE_USER',
           'ROLE_ADMIN' => 'ROLE_ADMIN: ROLE_USER',
-        ]));
+        ]);
 
-        $this->roleBuilder->expects($this->any())->method('getRolesReadOnly')->will($this->returnValue([]));
+        $this->roleBuilder->method('getRolesReadOnly')->willReturn([]);
 
         $childType = new SecurityRolesType($this->roleBuilder);
 
         return [new PreloadedExtension([
-          $childType->getName() => $childType,
+          $childType,
         ], [])];
     }
 
-    private function getSecurityRolesTypeName()
+    private function getSecurityRolesTypeName(): string
     {
-        return 'Sonata\UserBundle\Form\Type\SecurityRolesType';
+        return SecurityRolesType::class;
     }
 }

@@ -246,6 +246,10 @@
                 <source>Management</source>
                 <target>Management</target>
             </trans-unit>
+            <trans-unit id="form_status">
+                <source>Status</source>
+                <target>Status</target>
+            </trans-unit>
             <trans-unit id="field.label_roles_editable">
                 <source>field.label_roles_editable</source>
                 <target>Roles</target>
@@ -553,6 +557,14 @@
             <trans-unit id="title_user_resetting_reset">
                 <source>title_user_resetting_reset</source>
                 <target>Reset password</target>
+            </trans-unit>
+            <trans-unit id="qr_code_secret">
+                <source>qr_code_secret</source>
+                <target>QR-code secret</target>
+            </trans-unit>
+            <trans-unit id="qr_go_next">
+                <source>qr_go_next</source>
+                <target>I scanned it. Move on.</target>
             </trans-unit>
         </body>
     </file>

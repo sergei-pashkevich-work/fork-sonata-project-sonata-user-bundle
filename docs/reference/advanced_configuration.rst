@@ -42,22 +42,24 @@ Full configuration options:
         admin:                  # Admin Classes
             user:
                 class:          Sonata\UserBundle\Admin\Entity\UserAdmin
-                controller:     SonataAdminBundle:CRUD
+                controller:     Sonata\AdminBundle\Controller\CRUDController
                 translation:    SonataUserBundle
 
             group:
                 class:          Sonata\UserBundle\Admin\Entity\GroupAdmin
-                controller:     SonataAdminBundle:CRUD
+                controller:     Sonata\AdminBundle\Controller\CRUDController
                 translation:    SonataUserBundle
 
         profile:
-            default_avatar: 'bundles/sonatauser/default_avatar.png' # Default avatar displayed if user doesn't have one
+            default_avatar: 'bundles/sonatauser/default_avatar.png' # Default avatar displayed if the user doesn't have one
+
+        mailer: sonata.user.mailer.default # Service used to send emails
 
     # override FOSUser default serialization
     jms_serializer:
         metadata:
             directories:
-                -
+                App:
                     path: "%kernel.root_dir%/../vendor/sonata-project/user-bundle/Sonata/UserBundle/Resources/config/serializer/FOSUserBundle"
                     namespace_prefix: 'FOS\UserBundle'
 

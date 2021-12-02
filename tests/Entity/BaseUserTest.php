@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\UserBundle\Tests\Entity;
 
+use FOS\UserBundle\Model\GroupInterface;
 use PHPUnit\Framework\TestCase;
 use Sonata\UserBundle\Entity\BaseUser;
 
@@ -29,11 +30,11 @@ class BaseUserTest extends TestCase
         $user->setUpdatedAt($today);
 
         // Then
-        $this->assertTrue($user->getCreatedAt() instanceof \DateTime, 'Should return a DateTime object');
-        $this->assertEquals($today->format('U'), $user->getCreatedAt()->format('U'), 'Should contain today\'s date');
+        $this->assertInstanceOf(\DateTime::class, $user->getCreatedAt(), 'Should return a DateTime object');
+        $this->assertSame($today->format('U'), $user->getCreatedAt()->format('U'), 'Should contain today\'s date');
 
-        $this->assertTrue($user->getUpdatedAt() instanceof \DateTime, 'Should return a DateTime object');
-        $this->assertEquals($today->format('U'), $user->getUpdatedAt()->format('U'), 'Should contain today\'s date');
+        $this->assertInstanceOf(\DateTime::class, $user->getUpdatedAt(), 'Should return a DateTime object');
+        $this->assertSame($today->format('U'), $user->getUpdatedAt()->format('U'), 'Should contain today\'s date');
     }
 
     public function testDateWithPrePersist(): void
@@ -46,11 +47,11 @@ class BaseUserTest extends TestCase
         $user->prePersist();
 
         // Then
-        $this->assertTrue($user->getCreatedAt() instanceof \DateTime, 'Should contain a DateTime object');
-        $this->assertEquals($today->format('Y-m-d'), $user->getUpdatedAt()->format('Y-m-d'), 'Should be created today');
+        $this->assertInstanceOf(\DateTime::class, $user->getCreatedAt(), 'Should contain a DateTime object');
+        $this->assertSame($today->format('Y-m-d'), $user->getUpdatedAt()->format('Y-m-d'), 'Should be created today');
 
-        $this->assertTrue($user->getUpdatedAt() instanceof \DateTime, 'Should contain a DateTime object');
-        $this->assertEquals($today->format('Y-m-d'), $user->getUpdatedAt()->format('Y-m-d'), 'Should be updated today');
+        $this->assertInstanceOf(\DateTime::class, $user->getUpdatedAt(), 'Should contain a DateTime object');
+        $this->assertSame($today->format('Y-m-d'), $user->getUpdatedAt()->format('Y-m-d'), 'Should be updated today');
     }
 
     public function testDateWithPreUpdate(): void
@@ -64,21 +65,21 @@ class BaseUserTest extends TestCase
         $user->preUpdate();
 
         // Then
-        $this->assertTrue($user->getCreatedAt() instanceof \DateTime, 'Should contain a DateTime object');
-        $this->assertEquals('2012-01-01', $user->getCreatedAt()->format('Y-m-d'), 'Should be created at 2012-01-01.');
+        $this->assertInstanceOf(\DateTime::class, $user->getCreatedAt(), 'Should contain a DateTime object');
+        $this->assertSame('2012-01-01', $user->getCreatedAt()->format('Y-m-d'), 'Should be created at 2012-01-01.');
 
-        $this->assertTrue($user->getUpdatedAt() instanceof \DateTime, 'Should contain a DateTime object');
-        $this->assertEquals($today->format('Y-m-d'), $user->getUpdatedAt()->format('Y-m-d'), 'Should be updated today');
+        $this->assertInstanceOf(\DateTime::class, $user->getUpdatedAt(), 'Should contain a DateTime object');
+        $this->assertSame($today->format('Y-m-d'), $user->getUpdatedAt()->format('Y-m-d'), 'Should be updated today');
     }
 
     public function testSettingMultipleGroups(): void
     {
         // Given
         $user = new BaseUser();
-        $group1 = $this->createMock('FOS\UserBundle\Model\GroupInterface');
-        $group1->expects($this->any())->method('getName')->will($this->returnValue('Group 1'));
-        $group2 = $this->createMock('FOS\UserBundle\Model\GroupInterface');
-        $group2->expects($this->any())->method('getName')->will($this->returnValue('Group 2'));
+        $group1 = $this->createMock(GroupInterface::class);
+        $group1->method('getName')->willReturn('Group 1');
+        $group2 = $this->createMock(GroupInterface::class);
+        $group2->method('getName')->willReturn('Group 2');
 
         // When
         $user->setGroups([$group1, $group2]);
@@ -98,7 +99,7 @@ class BaseUserTest extends TestCase
         $user->setTwoStepVerificationCode('123456');
 
         // Then
-        $this->assertEquals('123456', $user->getTwoStepVerificationCode(), 'Should return the two step verification code');
+        $this->assertSame('123456', $user->getTwoStepVerificationCode(), 'Should return the two step verification code');
     }
 
     public function testToStringWithName(): void
@@ -111,7 +112,7 @@ class BaseUserTest extends TestCase
         $string = (string) $user;
 
         // Then
-        $this->assertEquals('John', $string, 'Should return the username as string representation');
+        $this->assertSame('John', $string, 'Should return the username as string representation');
     }
 
     public function testToStringWithoutName(): void
@@ -123,6 +124,6 @@ class BaseUserTest extends TestCase
         $string = (string) $user;
 
         // Then
-        $this->assertEquals('-', $string, 'Should return a string representation');
+        $this->assertSame('-', $string, 'Should return a string representation');
     }
 }

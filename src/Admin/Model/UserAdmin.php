@@ -22,7 +22,7 @@ use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\CoreBundle\Form\Type\DatePickerType;
 use Sonata\UserBundle\Form\Type\SecurityRolesType;
-use Sonata\UserBundle\Form\Type\UserGenderListType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
@@ -58,8 +58,8 @@ class UserAdmin extends AbstractAdmin
     public function getExportFields()
     {
         // avoid security field to be exported
-        return array_filter(parent::getExportFields(), function ($v) {
-            return !in_array($v, ['password', 'salt']);
+        return array_filter(parent::getExportFields(), static function ($v) {
+            return !\in_array($v, ['password', 'salt'], true);
         });
     }
 
@@ -72,9 +72,6 @@ class UserAdmin extends AbstractAdmin
         $this->getUserManager()->updatePassword($user);
     }
 
-    /**
-     * @param UserManagerInterface $userManager
-     */
     public function setUserManager(UserManagerInterface $userManager): void
     {
         $this->userManager = $userManager;
@@ -103,7 +100,7 @@ class UserAdmin extends AbstractAdmin
 
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             $listMapper
-                ->add('impersonating', 'string', ['template' => 'SonataUserBundle:Admin:Field/impersonating.html.twig'])
+                ->add('impersonating', 'string', ['template' => '@SonataUser/Admin/Field/impersonating.html.twig'])
             ;
         }
     }
@@ -182,6 +179,12 @@ class UserAdmin extends AbstractAdmin
 
         $now = new \DateTime();
 
+        $genderOptions = [
+            'choices' => \call_user_func([$this->getUserManager()->getClass(), 'getGenderList']),
+            'required' => true,
+            'translation_domain' => $this->getTranslationDomain(),
+        ];
+
         $formMapper
             ->tab('User')
                 ->with('General')
@@ -202,10 +205,7 @@ class UserAdmin extends AbstractAdmin
                     ->add('lastname', null, ['required' => false])
                     ->add('website', UrlType::class, ['required' => false])
                     ->add('biography', TextType::class, ['required' => false])
-                    ->add('gender', UserGenderListType::class, [
-                        'required' => true,
-                        'translation_domain' => $this->getTranslationDomain(),
-                    ])
+                    ->add('gender', ChoiceType::class, $genderOptions)
                     ->add('locale', LocaleType::class, ['required' => false])
                     ->add('timezone', TimezoneType::class, ['required' => false])
                     ->add('phone', null, ['required' => false])

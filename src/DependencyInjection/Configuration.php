@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\UserBundle\DependencyInjection;
 
+use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Admin\Entity\GroupAdmin;
 use Sonata\UserBundle\Admin\Entity\UserAdmin;
 use Sonata\UserBundle\Entity\BaseGroup;
@@ -32,8 +33,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sonata_user');
+        $treeBuilder = new TreeBuilder('sonata_user');
+
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->root('sonata_user');
+        } else {
+            $rootNode = $treeBuilder->getRootNode();
+        }
 
         $supportedManagerTypes = ['orm', 'mongodb'];
 
@@ -61,6 +68,16 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('server')->cannotBeEmpty()->end()
                         ->scalarNode('enabled')->defaultFalse()->end()
+                        ->arrayNode('ip_white_list')
+                            ->prototype('scalar')->end()
+                            ->defaultValue(['127.0.0.1'])
+                            ->info('IPs for which 2FA will be skipped.')
+                        ->end()
+                        ->arrayNode('forced_for_role')
+                            ->prototype('scalar')->end()
+                            ->defaultValue(['ROLE_ADMIN'])
+                            ->info('User roles for which 2FA is necessary.')
+                        ->end()
                     ->end()
                 ->end()
                 ->scalarNode('manager_type')
@@ -84,7 +101,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('class')->cannotBeEmpty()->defaultValue(GroupAdmin::class)->end()
-                                ->scalarNode('controller')->cannotBeEmpty()->defaultValue('SonataAdminBundle:CRUD')->end()
+                                ->scalarNode('controller')->cannotBeEmpty()->defaultValue(CRUDController::class)->end()
                                 ->scalarNode('translation')->cannotBeEmpty()->defaultValue('SonataUserBundle')->end()
                             ->end()
                         ->end()
@@ -92,7 +109,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('class')->cannotBeEmpty()->defaultValue(UserAdmin::class)->end()
-                                ->scalarNode('controller')->cannotBeEmpty()->defaultValue('SonataAdminBundle:CRUD')->end()
+                                ->scalarNode('controller')->cannotBeEmpty()->defaultValue(CRUDController::class)->end()
                                 ->scalarNode('translation')->cannotBeEmpty()->defaultValue('SonataUserBundle')->end()
                             ->end()
                         ->end()
@@ -105,6 +122,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('default_avatar')->defaultValue('bundles/sonatauser/default_avatar.png')->end()
                     ->end()
                 ->end()
+                ->scalarNode('mailer')->defaultValue('sonata.user.mailer.default')->info('Custom mailer used to send reset password emails')->end()
             ->end()
         ;
 

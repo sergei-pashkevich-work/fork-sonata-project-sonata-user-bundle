@@ -45,12 +45,6 @@ class EditableRolesBuilder
      */
     protected $rolesHierarchy;
 
-    /**
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param Pool                          $pool
-     * @param array                         $rolesHierarchy
-     */
     public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, Pool $pool, array $rolesHierarchy = [])
     {
         $this->tokenStorage = $tokenStorage;
@@ -97,7 +91,7 @@ class EditableRolesBuilder
             if ($this->authorizationChecker->isGranted($name) || $isMaster) {
                 $roles[$name] = $this->translateRole($name, $domain);
                 if ($expanded) {
-                    $result = array_map([$this, 'translateRole'], $rolesHierarchy, array_fill(0, count($rolesHierarchy), $domain));
+                    $result = array_map([$this, 'translateRole'], $rolesHierarchy, array_fill(0, \count($rolesHierarchy), $domain));
                     $roles[$name] .= ': '.implode(', ', $result);
                 }
                 foreach ($rolesHierarchy as $role) {
@@ -149,13 +143,13 @@ class EditableRolesBuilder
             // TODO get the base role from the admin or security handler
             $baseRole = $securityHandler->getBaseRole($admin);
 
-            if (0 == strlen($baseRole)) { // the security handler related to the admin does not provide a valid string
+            if (0 === \strlen($baseRole)) { // the security handler related to the admin does not provide a valid string
                 continue;
             }
 
             foreach ($admin->getSecurityInformation() as $role => $permissions) {
                 $role = sprintf($baseRole, $role);
-                call_user_func($func, $role, $isMaster, $permissions);
+                \call_user_func($func, $role, $isMaster, $permissions);
             }
         }
     }
