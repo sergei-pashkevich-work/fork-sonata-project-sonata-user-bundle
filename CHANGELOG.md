@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.4](https://github.com/paysera/fork-sonata-project-sonata-user-bundle/compare/4.0.3...4.0.4) - 2022-01-19
+### Added
+- Symfony 4.x compatibility
+
+### Changed
+- Travis related configuration
+
+## [4.0.3](https://github.com/paysera/fork-sonata-project-sonata-user-bundle/compare/4.0.2...4.0.3) - 2017-12-26
+### Added
+- PHP 7.0 compatibility
+
+### Removed
+- PHP 7.1 requirement
+
+## [4.0.2](https://github.com/paysera/fork-sonata-project-sonata-user-bundle/compare/4.0.1...4.0.2) - 2017-12-26
+### Changed
+- Package name (fork support)
+
 ## [4.0.1](https://github.com/sonata-project/SonataUserBundle/compare/4.0.0...4.0.1) - 2017-12-20
 ### Fixed
 - Fixed flipped choices values/labels in SecurityRolesType when using symfony 2.8
